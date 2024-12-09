@@ -68,7 +68,9 @@ void Error_Handler(void);
 #define PS2_DATA_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
-extern uint8_t VideoRam[200 * 200];
+#define H_SIZE 720
+#define V_SIZE 400
+extern uint8_t VideoRam[H_SIZE * V_SIZE];
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

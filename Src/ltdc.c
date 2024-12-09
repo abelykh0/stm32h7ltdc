@@ -60,19 +60,19 @@ void MX_LTDC_Init(void)
     Error_Handler();
   }
   pLayerCfg.WindowX0 = 0;
-  pLayerCfg.WindowX1 = 199;
+  pLayerCfg.WindowX1 = 719;
   pLayerCfg.WindowY0 = 0;
-  pLayerCfg.WindowY1 = 199;
+  pLayerCfg.WindowY1 = 399;
   pLayerCfg.PixelFormat = LTDC_PIXEL_FORMAT_L8;
   pLayerCfg.Alpha = 0xff;
   pLayerCfg.Alpha0 = 0xff;
   pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_CA;
   pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_PAxCA;
   pLayerCfg.FBStartAdress = (uint32_t)VideoRam;
-  pLayerCfg.ImageWidth = 200;
-  pLayerCfg.ImageHeight = 200;
-  pLayerCfg.Backcolor.Blue = 0xff;
-  pLayerCfg.Backcolor.Green = 0;
+  pLayerCfg.ImageWidth = 720;
+  pLayerCfg.ImageHeight = 400;
+  pLayerCfg.Backcolor.Blue = 0;
+  pLayerCfg.Backcolor.Green = 0xff;
   pLayerCfg.Backcolor.Red = 0;
   if (HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0) != HAL_OK)
   {

@@ -19,7 +19,7 @@ extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
 extern USBD_HandleTypeDef hUsbDeviceFS;
 
 static uint32_t L8Clut[256];
-uint8_t VideoRam[200 * 200];// __attribute__(( section(".sram2") ));
+uint8_t VideoRam[H_SIZE * V_SIZE];// __attribute__(( section(".sram2") ));
 
 static Display::Screen screen;
 
@@ -40,11 +40,20 @@ extern "C" void setup()
 	HAL_LTDC_ConfigCLUT(&hltdc, L8Clut, 256, LTDC_LAYER_1);
 	HAL_LTDC_EnableCLUT(&hltdc, LTDC_LAYER_1);
 
-	memset(VideoRam               , 0x10, 200 * 40);
-	memset(VideoRam + 200 * 40 * 1, 0x03, 200 * 40); // red
-	memset(VideoRam + 200 * 40 * 2, 0x0C, 200 * 40); // green
-	memset(VideoRam + 200 * 40 * 3, 0x30, 200 * 40); // blue
-	memset(VideoRam + 200 * 40 * 4, 0xFF, 200 * 40);
+	memset(VideoRam               , 0x10, H_SIZE * V_SIZE);
+
+	for (uint8_t color = 0; color < 4; color++)
+	{
+		memset(VideoRam + H_SIZE * 6 * color, color, H_SIZE * 6);
+	}
+	for (uint8_t color = 0; color < 4; color++)
+	{
+		memset(VideoRam + H_SIZE * 6 * (color + 4), color << 2, H_SIZE * 6);
+	}
+	for (uint8_t color = 0; color < 4; color++)
+	{
+		memset(VideoRam + H_SIZE * 6 * (color + 8), color << 4, H_SIZE * 6);
+	}
 
 
 /*

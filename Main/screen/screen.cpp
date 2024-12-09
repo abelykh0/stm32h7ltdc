@@ -2,7 +2,7 @@
 #include "usbd_video_conf.h"
 #include <string.h>
 
-uint8_t font8x8[2032];
+uint8_t font8x8[2032] __attribute__(( section(".sram2") ));
 
 namespace Display
 {
