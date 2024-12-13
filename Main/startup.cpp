@@ -155,11 +155,11 @@ static void LtdcInit()
 	PeriphClkInitStruct.PLL3.PLL3P = 2;
 	PeriphClkInitStruct.PLL3.PLL3Q = 2;
 	PeriphClkInitStruct.PLL3.PLL3FRACN = 0;
+	PeriphClkInitStruct.PLL3.PLL3VCOSEL = RCC_PLL3VCOWIDE;
 
 	PeriphClkInitStruct.PLL3.PLL3M = VIDEO_MODE_PLL3M;
 	PeriphClkInitStruct.PLL3.PLL3N = VIDEO_MODE_PLL3N;
 	PeriphClkInitStruct.PLL3.PLL3R = VIDEO_MODE_PLL3R;
-	PeriphClkInitStruct.PLL3.PLL3VCOSEL = VIDEO_MODE_PLL3VCOSEL;
 	PeriphClkInitStruct.PLL3.PLL3RGE = VIDEO_MODE_PLL3RGE;
 
 	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
