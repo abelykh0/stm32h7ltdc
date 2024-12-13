@@ -59,8 +59,8 @@
 
 static uint8_t chunkIndex;
 static uint8_t* mdmaOutput;
-static uint8_t outbytes0[153600] __attribute__(( section(".sram2") ));
-static uint8_t outbytes1[153600];
+static uint8_t outbytes0[1] __attribute__(( section(".sram2") ));
+static uint8_t outbytes1[1] __attribute__(( section(".sram2") ));
 static uint8_t* write_pointer = outbytes0;
 static uint8_t* read_pointer = outbytes0;
 static uint32_t jpgLength = 0;

@@ -20,7 +20,6 @@
 #include "main.h"
 #include "fatfs.h"
 #include "jpeg.h"
-#include "ltdc.h"
 #include "mdma.h"
 #include "memorymap.h"
 #include "rtc.h"
@@ -112,7 +111,6 @@ int main(void)
   MX_SDMMC1_SD_Init();
   MX_FATFS_Init();
   MX_JPEG_Init();
-  MX_LTDC_Init();
   /* USER CODE BEGIN 2 */
   setup();
   /* USER CODE END 2 */

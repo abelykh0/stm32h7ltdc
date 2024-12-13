@@ -31,7 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "config.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -68,9 +68,6 @@ void Error_Handler(void);
 #define PS2_DATA_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
-#define H_SIZE 720
-#define V_SIZE 400
-extern uint8_t VideoRam[H_SIZE * V_SIZE];
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
