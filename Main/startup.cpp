@@ -39,7 +39,7 @@ extern "C" void setup()
 	USB_DEVICE_Init();
 	MapFlash();
 
-	memset(VideoRam               , 0x10, H_SIZE * V_SIZE);
+	memset(VideoRam               , 0x20, H_SIZE * V_SIZE);
 
 	for (uint8_t color = 0; color < 4; color++)
 	{
@@ -159,7 +159,7 @@ static void LtdcInit()
 	PeriphClkInitStruct.PLL3.PLL3M = VIDEO_MODE_PLL3M;
 	PeriphClkInitStruct.PLL3.PLL3N = VIDEO_MODE_PLL3N;
 	PeriphClkInitStruct.PLL3.PLL3R = VIDEO_MODE_PLL3R;
-	PeriphClkInitStruct.PLL3.PLL3VCOSEL = RCC_PLL3VCOWIDE;
+	PeriphClkInitStruct.PLL3.PLL3VCOSEL = VIDEO_MODE_PLL3VCOSEL;
 	PeriphClkInitStruct.PLL3.PLL3RGE = VIDEO_MODE_PLL3RGE;
 
 	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
@@ -168,27 +168,28 @@ static void LtdcInit()
 	}
 
 	LTDC_LayerCfgTypeDef pLayerCfg = {0};
-
 	hltdc.Instance = LTDC;
-	hltdc.Init.DEPolarity = LTDC_DEPOLARITY_AL;
-	hltdc.Init.PCPolarity = LTDC_PCPOLARITY_IIPC;
-	hltdc.Init.Backcolor.Blue = 0;
-	hltdc.Init.Backcolor.Green = 0;
-	hltdc.Init.Backcolor.Red = 0;
+
+	LTDC_InitTypeDef* init = &hltdc.Init;
+	init->DEPolarity = LTDC_DEPOLARITY_AL;
+	init->PCPolarity = LTDC_PCPOLARITY_IIPC;
+	init->Backcolor.Blue = 0;
+	init->Backcolor.Green = 0;
+	init->Backcolor.Red = 0;
 
 	// Horizontal
-	hltdc.Init.HSPolarity = VIDEO_MODE_H_POLARITY;
-	hltdc.Init.HorizontalSync = VIDEO_MODE_H_SYNC - 1;
-	hltdc.Init.AccumulatedHBP = VIDEO_MODE_H_SYNC + VIDEO_MODE_H_BACKPORCH - 1;
-	hltdc.Init.AccumulatedActiveW = VIDEO_MODE_H_SYNC + VIDEO_MODE_H_BACKPORCH + VIDEO_MODE_H_WIDTH - 1;
-	hltdc.Init.TotalWidth = VIDEO_MODE_H_SYNC + VIDEO_MODE_H_BACKPORCH + VIDEO_MODE_H_WIDTH + VIDEO_MODE_H_FRONTPORCH - 1;
+	init->HSPolarity = VIDEO_MODE_H_POLARITY;
+	init->HorizontalSync = VIDEO_MODE_H_SYNC - 1;
+	init->AccumulatedHBP = init->HorizontalSync + VIDEO_MODE_H_BACKPORCH;
+	init->AccumulatedActiveW = init->AccumulatedHBP + VIDEO_MODE_H_WIDTH;
+	init->TotalWidth = init->AccumulatedActiveW + VIDEO_MODE_H_FRONTPORCH;
 
 	// Vertical
-	hltdc.Init.VSPolarity = VIDEO_MODE_V_POLARITY;
-	hltdc.Init.VerticalSync = VIDEO_MODE_V_SYNC - 1;
-	hltdc.Init.AccumulatedVBP = VIDEO_MODE_V_SYNC + VIDEO_MODE_V_BACKPORCH - 1;
-	hltdc.Init.AccumulatedActiveH = VIDEO_MODE_V_SYNC + VIDEO_MODE_V_BACKPORCH + VIDEO_MODE_V_HEIGHT - 1;
-	hltdc.Init.TotalHeigh = VIDEO_MODE_V_SYNC + VIDEO_MODE_V_BACKPORCH + VIDEO_MODE_V_HEIGHT + VIDEO_MODE_V_FRONTPORCH - 1;
+	init->VSPolarity = VIDEO_MODE_V_POLARITY;
+	init->VerticalSync = VIDEO_MODE_V_SYNC - 1;
+	init->AccumulatedVBP = init->VerticalSync + VIDEO_MODE_V_BACKPORCH;
+	init->AccumulatedActiveH = init->AccumulatedVBP + VIDEO_MODE_V_HEIGHT;
+	init->TotalHeigh = init->AccumulatedActiveH + VIDEO_MODE_V_FRONTPORCH;
 
 	if (HAL_LTDC_Init(&hltdc) != HAL_OK)
 	{
@@ -200,14 +201,14 @@ static void LtdcInit()
 	pLayerCfg.Alpha0 = 0xff;
 	pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_CA;
 	pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_PAxCA;
-	pLayerCfg.Backcolor.Blue = 0;
-	pLayerCfg.Backcolor.Green = 0xff;
+	pLayerCfg.Backcolor.Blue = 0x04;
+	pLayerCfg.Backcolor.Green = 0;
 	pLayerCfg.Backcolor.Red = 0;
 
 	pLayerCfg.WindowX0 = (VIDEO_MODE_H_WIDTH - H_SIZE) / 2;
-	pLayerCfg.WindowX1 = H_SIZE - 1;
+	pLayerCfg.WindowX1 = pLayerCfg.WindowX0 + H_SIZE - 1;
 	pLayerCfg.WindowY0 = (VIDEO_MODE_V_HEIGHT - V_SIZE) / 2;
-	pLayerCfg.WindowY1 = V_SIZE - 1;
+	pLayerCfg.WindowY1 = pLayerCfg.WindowY0 + V_SIZE - 1;
 	pLayerCfg.ImageWidth = H_SIZE;
 	pLayerCfg.ImageHeight = V_SIZE;
 	pLayerCfg.FBStartAdress = (uint32_t)VideoRam;
