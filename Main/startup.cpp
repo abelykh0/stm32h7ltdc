@@ -149,24 +149,6 @@ static void PrepareClut()
 
 static void LtdcInit()
 {
-	// Pixel clock
-	RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
-	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_LTDC;
-	PeriphClkInitStruct.PLL3.PLL3P = 2;
-	PeriphClkInitStruct.PLL3.PLL3Q = 2;
-	PeriphClkInitStruct.PLL3.PLL3FRACN = 0;
-	PeriphClkInitStruct.PLL3.PLL3VCOSEL = RCC_PLL3VCOWIDE;
-
-	PeriphClkInitStruct.PLL3.PLL3M = VIDEO_MODE_PLL3M;
-	PeriphClkInitStruct.PLL3.PLL3N = VIDEO_MODE_PLL3N;
-	PeriphClkInitStruct.PLL3.PLL3R = VIDEO_MODE_PLL3R;
-	PeriphClkInitStruct.PLL3.PLL3RGE = VIDEO_MODE_PLL3RGE;
-
-	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
-	{
-		Error_Handler();
-	}
-
 	LTDC_LayerCfgTypeDef pLayerCfg = {0};
 	hltdc.Instance = LTDC;
 
@@ -214,6 +196,26 @@ static void LtdcInit()
 	pLayerCfg.FBStartAdress = (uint32_t)VideoRam;
 
 	if (HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
+	HAL_LTDC_MspInit(&hltdc);
+
+	// Pixel clock
+	RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
+	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_LTDC;
+	PeriphClkInitStruct.PLL3.PLL3P = 2;
+	PeriphClkInitStruct.PLL3.PLL3Q = 2;
+	PeriphClkInitStruct.PLL3.PLL3FRACN = 0;
+	PeriphClkInitStruct.PLL3.PLL3VCOSEL = RCC_PLL3VCOWIDE;
+
+	PeriphClkInitStruct.PLL3.PLL3M = VIDEO_MODE_PLL3M;
+	PeriphClkInitStruct.PLL3.PLL3N = VIDEO_MODE_PLL3N;
+	PeriphClkInitStruct.PLL3.PLL3R = VIDEO_MODE_PLL3R;
+	PeriphClkInitStruct.PLL3.PLL3RGE = VIDEO_MODE_PLL3RGE;
+
+	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
 	{
 		Error_Handler();
 	}

@@ -7,9 +7,9 @@
 extern uint8_t VideoRam[H_SIZE * V_SIZE];
 
 // Wide modes
-//#define VIDEO_MODE_720x400
+#define VIDEO_MODE_720x400
 //#define VIDEO_MODE_848x480
-#define VIDEO_MODE_1280x720
+//#define VIDEO_MODE_1280x720
 //#define VIDEO_MODE_1600x900
 
 // Classic modes (4:3)
