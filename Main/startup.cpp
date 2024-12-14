@@ -1,9 +1,6 @@
 #include "startup.h"
 
 #include "stm32h7xx_hal.h"
-#include "usbd_core.h"
-#include "usbd_desc.h"
-#include "usbd_video_if.h"
 #include "ltdc.h"
 #include "quadspi.h"
 #include "w25qxx_qspi.h"
@@ -15,15 +12,12 @@
 #include "emulator/bkEmu.h"
 
 extern JPEG_HandleTypeDef hjpeg;
-extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
-extern USBD_HandleTypeDef hUsbDeviceFS;
 
 static uint32_t L8Clut[256];
 uint8_t VideoRam[H_SIZE * V_SIZE];// __attribute__(( section(".sram2") ));
 
 static Display::Screen screen;
 
-static void USB_DEVICE_Init();
 static void MapFlash();
 static void PrepareClut();
 static void LtdcInit();
@@ -35,9 +29,9 @@ extern "C" void initialize()
 
 extern "C" void setup()
 {
-	LtdcInit();
-	USB_DEVICE_Init();
 	MapFlash();
+
+	LtdcInit();
 
 	memset(VideoRam               , 0x20, H_SIZE * V_SIZE);
 
@@ -54,6 +48,7 @@ extern "C" void setup()
 		memset(VideoRam + H_SIZE * 6 * (color + 8), color == 0 ? 0x3F : color  << 4, H_SIZE * 6);
 	}
 
+	memcpy(VideoRam + H_SIZE * 6 * 12, (void*)QSPI_BASE, H_SIZE * 18);
 
 /*
 	// Read ROMs from external flash
@@ -85,34 +80,8 @@ extern "C" void setup()
 extern "C" void loop()
 {
 	//bk_loop();
-	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_3);
+	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_1);
 	HAL_Delay(500);
-}
-
-static void USB_DEVICE_Init()
-{
-	  if (USBD_Init(&hUsbDeviceFS, &FS_Desc, DEVICE_FS) != USBD_OK)
-	  {
-	    Error_Handler();
-	  }
-
-	  // Defaults are 128, 64, 128 (320 total)
-	  HAL_PCDEx_SetRxFiFo(&hpcd_USB_OTG_FS,    48);
-	  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 0, 16);
-	  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 1, 256);
-
-	  if (USBD_RegisterClass(&hUsbDeviceFS, &USBD_VIDEO) != USBD_OK)
-	  {
-	    Error_Handler();
-	  }
-	  if (USBD_VIDEO_RegisterInterface(&hUsbDeviceFS, &USBD_VIDEO_fops_FS) != USBD_OK)
-	  {
-	    Error_Handler();
-	  }
-	  if (USBD_Start(&hUsbDeviceFS) != USBD_OK)
-	  {
-	    Error_Handler();
-	  }
 }
 
 static void MapFlash()
@@ -219,6 +188,15 @@ static void LtdcInit()
 	{
 		Error_Handler();
 	}
+
+	// Unfortunately, pin A1 is a LED, take it back :)
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+	GPIO_InitStruct.Pin = GPIO_PIN_1;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
 
 	HAL_LTDC_ConfigCLUT(&hltdc, L8Clut, 256, LTDC_LAYER_1);
 	HAL_LTDC_EnableCLUT(&hltdc, LTDC_LAYER_1);

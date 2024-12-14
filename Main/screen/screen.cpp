@@ -1,5 +1,4 @@
 #include <screen/screen.h>
-#include "usbd_video_conf.h"
 #include <string.h>
 
 uint8_t font8x8[2032] __attribute__(( section(".sram2") ));
@@ -13,7 +12,7 @@ Screen::Screen()
 
 void Screen::Clear()
 {
-	::Clear(this->_attribute);
+	//::Clear(this->_attribute);
 }
 
 void Screen::SetFont(const uint8_t* font)
@@ -136,7 +135,7 @@ void Screen::DrawChar(const uint8_t* f, uint16_t x, uint16_t y, uint8_t c)
             	color = this->_attribute & 0x03F;
             }
 
-            SetPixel(x * 8 + j, y * 8 + i, color);
+            //SetPixel(x * 8 + j, y * 8 + i, color);
         }
     }
 }

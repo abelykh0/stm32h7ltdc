@@ -4,6 +4,8 @@
 // Visible screen area (without borders)
 #define H_SIZE 512
 #define V_SIZE 256
+#define TEXT_COLUMNS (H_SIZE / 8)
+#define TEXT_ROWS (V_SIZE / 8)
 extern uint8_t VideoRam[H_SIZE * V_SIZE];
 
 // Wide modes

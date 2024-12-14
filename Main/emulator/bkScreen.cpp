@@ -1,6 +1,6 @@
 #include <unordered_map>
 #include "bkScreen.h"
-#include "screen/canvas.h"
+#include "screen/screen.h"
 
 using namespace bk;
 using namespace std;
@@ -11,17 +11,6 @@ using namespace std;
 // 83 - 256x256, inversion, colors
 // 84 - 256x256, no inversion, black and white
 // 85 - 256x256, inversion, black and white
-unordered_map<uint8_t, uint8_t> mode512x256 {
-	{16, 0x00 },
-	{235,0x01 }
-};
-
-unordered_map<uint8_t, uint8_t> mode256x256 {
-	{16, 0x00 },
-	{82, 0x01 },
-	{145,0x02 },
-	{41, 0x03 }
-};
 
 void bkScreen::setMode(uint8_t mode)
 {
@@ -30,7 +19,7 @@ void bkScreen::setMode(uint8_t mode)
 
 void bkScreen::setOffset(uint8_t offset)
 {
-	setVerticalOffset(offset);
+	//setVerticalOffset(offset);
 }
 
 uint8_t bkScreen::getVideoRam(uint16_t address)
@@ -45,16 +34,16 @@ uint8_t bkScreen::getVideoRam(uint16_t address)
 		uint16_t y = offset / 64;
 		for (uint16_t x = charX * 8; x < charX * 8 + 8; x++)
 		{
-			YCbCr pixel = GetPixel(x, y);
-			uint8_t pixelBit = mode512x256[pixel.y];
+			//YCbCr pixel = GetPixel(x, y);
+			//uint8_t pixelBit = mode512x256[pixel.y];
 
 			if ((this->mode & 0x01) != 0)
 			{
 				// inversion
-				pixelBit ^= 1;
+				//pixelBit ^= 1;
 			}
 
-			result |= pixelBit;
+			//result |= pixelBit;
 		    result <<= 1;
 		}
 	}
@@ -66,16 +55,16 @@ uint8_t bkScreen::getVideoRam(uint16_t address)
 		uint16_t y = offset / 64;
 		for (uint16_t x = charX * 8; x < charX * 8 + 8; x += 2)
 		{
-			YCbCr pixel = GetPixel(x, y);
-			uint8_t pixelBits = mode256x256[pixel.y];
+			//YCbCr pixel = GetPixel(x, y);
+			//uint8_t pixelBits = mode256x256[pixel.y];
 
 			if ((this->mode & 0x01) != 0)
 			{
 				// inversion
-				pixelBits ^= 0x03;
+				//pixelBits ^= 0x03;
 			}
 
-			result |= pixelBits;
+			//result |= pixelBits;
 		    result <<= 2;
 		}
 	}
@@ -111,7 +100,7 @@ void bkScreen::setVideoRam(uint16_t address, uint8_t value)
 			}
 
 			value >>= 1;
-			SetPixel(x, y, color);
+			//SetPixel(x, y, color);
 		}
 	}
 	else
@@ -147,8 +136,8 @@ void bkScreen::setVideoRam(uint16_t address, uint8_t value)
 			}
 
 			value >>= 2;
-			SetPixel(x, y, color);
-			SetPixel(x + 1, y, color);
+			//SetPixel(x, y, color);
+			//SetPixel(x + 1, y, color);
 		}
 	}
 }

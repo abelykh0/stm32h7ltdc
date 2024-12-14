@@ -3,7 +3,7 @@
 
 #include <emulator/pdp/defines.h>
 
-#define RAM_AVAILABLE 0x01 //0x4000
+#define RAM_AVAILABLE 0x4000
 extern uint8_t RamBuffer[RAM_AVAILABLE];
 extern pdp_regs pdp;
 extern uint8_t basic[1]; //[24448];

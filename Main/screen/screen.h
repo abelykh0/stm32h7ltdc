@@ -2,8 +2,8 @@
 #define _SCREEN_H
 
 #include "stdint.h"
+#include "config.h"
 #include "font8x8.h"
-#include "canvas.h"
 
 namespace Display
 {
