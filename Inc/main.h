@@ -57,13 +57,10 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define KEY_Pin GPIO_PIN_13
-#define KEY_GPIO_Port GPIOC
-#define PS2_CLK_Pin GPIO_PIN_9
-#define PS2_CLK_GPIO_Port GPIOA
-#define PS2_CLK_EXTI_IRQn EXTI9_5_IRQn
-#define PS2_DATA_Pin GPIO_PIN_10
-#define PS2_DATA_GPIO_Port GPIOA
+#define BUTTON1_Pin GPIO_PIN_3
+#define BUTTON1_GPIO_Port GPIOE
+#define BUTTON2_Pin GPIO_PIN_5
+#define BUTTON2_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
 /* USER CODE END Private defines */

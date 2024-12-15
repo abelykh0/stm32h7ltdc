@@ -50,7 +50,6 @@ extern "C" void setup()
 
 	memcpy(VideoRam + H_SIZE * 6 * 12, (void*)QSPI_BASE, H_SIZE * 18);
 
-/*
 	// Read ROMs from external flash
 	// (the built-in flash is only 128K)
 	if (f_mount(&USERFatFS, (TCHAR*)u"1:/", 1) == FR_OK)
@@ -72,9 +71,6 @@ extern "C" void setup()
 
 		f_mount(nullptr, nullptr, 1);
 	}
-*/
-
-
 }
 
 extern "C" void loop()

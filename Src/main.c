@@ -24,6 +24,7 @@
 #include "memorymap.h"
 #include "rtc.h"
 #include "sdmmc.h"
+#include "usb_host.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -55,6 +56,8 @@
 void SystemClock_Config(void);
 void PeriphCommonClock_Config(void);
 static void MPU_Config(void);
+void MX_USB_HOST_Process(void);
+
 /* USER CODE BEGIN PFP */
 /* USER CODE END PFP */
 
@@ -108,6 +111,7 @@ int main(void)
   MX_SDMMC1_SD_Init();
   MX_FATFS_Init();
   MX_JPEG_Init();
+  MX_USB_HOST_Init();
   /* USER CODE BEGIN 2 */
   setup();
   /* USER CODE END 2 */
@@ -117,6 +121,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+    MX_USB_HOST_Process();
 
     /* USER CODE BEGIN 3 */
 	loop();
@@ -151,9 +156,11 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE|RCC_OSCILLATORTYPE_LSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48|RCC_OSCILLATORTYPE_HSE
+                              |RCC_OSCILLATORTYPE_LSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.LSEState = RCC_LSE_ON;
+  RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 5;

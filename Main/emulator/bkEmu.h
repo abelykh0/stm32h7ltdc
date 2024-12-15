@@ -6,8 +6,8 @@
 #define RAM_AVAILABLE 0x4000
 extern uint8_t RamBuffer[RAM_AVAILABLE];
 extern pdp_regs pdp;
-extern uint8_t basic[1]; //[24448];
-extern uint8_t monitor[1]; //[8192];
+extern uint8_t basic[24448];
+extern uint8_t monitor[8192];
 
 // 0..7 Shift
 // 9 Extended memory 0 - on, 1 - off

@@ -20,8 +20,8 @@
 #include "keyboard/ps2_keyboard.h"
 
 uint8_t RamBuffer[RAM_AVAILABLE] __attribute__(( section(".sram2") ));
-uint8_t basic[1]; //[24448];
-uint8_t monitor[1]; //[8192] __attribute__(( section(".sram2") ));
+uint8_t basic[24448] __attribute__(( section(".sram2") ));
+uint8_t monitor[8192] __attribute__(( section(".sram2") ));
 
 pdp_regs pdp;
 

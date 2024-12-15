@@ -51,27 +51,17 @@ void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
-  /*Configure GPIO pin : KEY_Pin */
-  GPIO_InitStruct.Pin = KEY_Pin;
+  /*Configure GPIO pin : BUTTON1_Pin */
+  GPIO_InitStruct.Pin = BUTTON1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-  HAL_GPIO_Init(KEY_GPIO_Port, &GPIO_InitStruct);
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(BUTTON1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PS2_CLK_Pin */
-  GPIO_InitStruct.Pin = PS2_CLK_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-  HAL_GPIO_Init(PS2_CLK_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : PS2_DATA_Pin */
-  GPIO_InitStruct.Pin = PS2_DATA_Pin;
+  /*Configure GPIO pin : BUTTON2_Pin */
+  GPIO_InitStruct.Pin = BUTTON2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-  HAL_GPIO_Init(PS2_DATA_GPIO_Port, &GPIO_InitStruct);
-
-  /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(BUTTON2_GPIO_Port, &GPIO_InitStruct);
 
 }
 
