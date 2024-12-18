@@ -3,6 +3,6 @@
 
 #include "stdint.h"
 
-extern uint8_t font8x8[2032];
+extern const unsigned char font8x8[];
 
 #endif

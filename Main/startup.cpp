@@ -10,6 +10,7 @@
 #include "screen/screen.h"
 #include "keyboard/ps2_keyboard.h"
 #include "emulator/bkEmu.h"
+#include "demo_colors/demo_colors.h"
 
 extern JPEG_HandleTypeDef hjpeg;
 
@@ -29,29 +30,9 @@ extern "C" void initialize()
 
 extern "C" void setup()
 {
-	MapFlash();
-
-	LtdcInit();
-
-	memset(VideoRam               , 0x20, H_SIZE * V_SIZE);
-
-	for (uint8_t color = 0; color < 4; color++)
-	{
-		memset(VideoRam + H_SIZE * 6 * color, color == 0 ? 0x3F : color, H_SIZE * 6);
-	}
-	for (uint8_t color = 0; color < 4; color++)
-	{
-		memset(VideoRam + H_SIZE * 6 * (color + 4), color == 0 ? 0x3F : color << 2, H_SIZE * 6);
-	}
-	for (uint8_t color = 0; color < 4; color++)
-	{
-		memset(VideoRam + H_SIZE * 6 * (color + 8), color == 0 ? 0x3F : color  << 4, H_SIZE * 6);
-	}
-
-	memcpy(VideoRam + H_SIZE * 6 * 12, (void*)QSPI_BASE, H_SIZE * 18);
-
 	// Read ROMs from external flash
 	// (the built-in flash is only 128K)
+	MapFlash();
 	if (f_mount(&USERFatFS, (TCHAR*)u"1:/", 1) == FR_OK)
 	{
 		FIL file;
@@ -71,13 +52,17 @@ extern "C" void setup()
 
 		f_mount(nullptr, nullptr, 1);
 	}
+
+	LtdcInit();
+	init_demo_colors();
 }
 
 extern "C" void loop()
 {
 	//bk_loop();
-	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_1);
-	HAL_Delay(500);
+	loop_demo_colors();
+	//HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_1);
+	//HAL_Delay(500);
 }
 
 static void MapFlash()
@@ -148,9 +133,11 @@ static void LtdcInit()
 	pLayerCfg.Alpha0 = 0xff;
 	pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_CA;
 	pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_PAxCA;
-	pLayerCfg.Backcolor.Blue = 0x04;
-	pLayerCfg.Backcolor.Green = 0;
-	pLayerCfg.Backcolor.Red = 0;
+
+	uint32_t argb = L8Clut[BORDER_COLOR];
+	pLayerCfg.Backcolor.Blue = argb & 0xFF;
+	pLayerCfg.Backcolor.Green = (argb >> 8) & 0xFF;
+	pLayerCfg.Backcolor.Red = (argb >> 16) & 0xFF;
 
 	pLayerCfg.WindowX0 = (VIDEO_MODE_H_WIDTH - H_SIZE) / 2;
 	pLayerCfg.WindowX1 = pLayerCfg.WindowX0 + H_SIZE - 1;
@@ -185,14 +172,13 @@ static void LtdcInit()
 		Error_Handler();
 	}
 
-	// Unfortunately, pin A1 is a LED, take it back :)
+	// Unfortunately, pin A1 is an LED, take it back :)
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 	GPIO_InitStruct.Pin = GPIO_PIN_1;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
 
 	HAL_LTDC_ConfigCLUT(&hltdc, L8Clut, 256, LTDC_LAYER_1);
 	HAL_LTDC_EnableCLUT(&hltdc, LTDC_LAYER_1);
