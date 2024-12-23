@@ -6,9 +6,10 @@
 #include "w25qxx_qspi.h"
 #include "user_diskio.h"
 #include "fatfs.h"
+#include "usb_host.h"
+#include "usbh_hid.h"
 
 #include "screen/screen.h"
-#include "keyboard/ps2_keyboard.h"
 #include "emulator/bkEmu.h"
 #include "demo_colors/demo_colors.h"
 
@@ -55,14 +56,23 @@ extern "C" void setup()
 
 	LtdcInit();
 	init_demo_colors();
+
+	HAL_PWREx_EnableUSBVoltageDetector();
 }
 
 extern "C" void loop()
 {
 	//bk_loop();
-	loop_demo_colors();
+	//loop_demo_colors();
+	MX_USB_HOST_Process();
 	//HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_1);
 	//HAL_Delay(500);
+}
+
+extern "C" void USBH_HID_EventCallback(USBH_HandleTypeDef *phost)
+{
+	HID_KEYBD_Info_TypeDef* keyboardInfo = USBH_HID_GetKeybdInfo(phost);
+	//USBH_HID_GetASCIICode(USBH_HID_GetKeybdInfo(phost))
 }
 
 static void MapFlash()

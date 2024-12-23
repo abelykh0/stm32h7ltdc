@@ -470,7 +470,7 @@ USBH_StatusTypeDef USBH_LL_DriverVBUS(USBH_HandleTypeDef *phost, uint8_t state)
       /* Drive high Charge pump */
       /* ToDo: Add IOE driver control */
       /* USER CODE BEGIN DRIVE_HIGH_CHARGE_FOR_FS */
-
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
       /* USER CODE END DRIVE_HIGH_CHARGE_FOR_FS */
     }
     else
@@ -478,7 +478,7 @@ USBH_StatusTypeDef USBH_LL_DriverVBUS(USBH_HandleTypeDef *phost, uint8_t state)
       /* Drive low Charge pump */
       /* ToDo: Add IOE driver control */
       /* USER CODE BEGIN DRIVE_LOW_CHARGE_FOR_FS */
-
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
       /* USER CODE END DRIVE_LOW_CHARGE_FOR_FS */
     }
   }
