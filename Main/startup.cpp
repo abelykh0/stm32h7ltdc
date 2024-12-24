@@ -55,18 +55,43 @@ extern "C" void setup()
 	}
 
 	LtdcInit();
-	init_demo_colors();
-
 	HAL_PWREx_EnableUSBVoltageDetector();
+
+	//init_demo_colors();
+	if (f_mount(&SDFatFS, (TCHAR*)u"1:/", 1) == FR_OK)
+	{
+		FIL file;
+		if (f_open(&file, (const TCHAR*)u"1:/Keyboard720x400.bmp", FA_READ) == FR_OK)
+		{
+			// read BMP file header
+			bmpHeader header;
+			UINT bytesRead = sizeof(header);
+			f_read(&file, &header, bytesRead, &bytesRead);
+			uint32_t offset = header.offsetPixels;
+
+			// Skip to pixels
+			f_lseek(&file, offset);
+
+			// Read pixels
+			bytesRead = sizeof(VideoRam);
+			f_read(&file, VideoRam, bytesRead, &bytesRead);
+
+			f_close(&file);
+		}
+
+		f_mount(nullptr, nullptr, 1);
+	}
+
+
 }
 
 extern "C" void loop()
 {
 	//bk_loop();
 	//loop_demo_colors();
-	MX_USB_HOST_Process();
+	//MX_USB_HOST_Process();
 	//HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_1);
-	//HAL_Delay(500);
+	HAL_Delay(50);
 }
 
 extern "C" void USBH_HID_EventCallback(USBH_HandleTypeDef *phost)
